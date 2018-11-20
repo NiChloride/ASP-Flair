@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import *
 # Register your models here.
-from .models import Supply, Order, OrderSupplyMatching, Clinic,Drone,DistanceBetween2Clinics,Category
+from .models import Supply, Order, OrderSupplyMatching, Clinic,Drone,DistanceBetween2Clinics,Category, UserProfile
 
 # Define the admin class
 class SupplyAdmin(admin.ModelAdmin):
@@ -40,3 +40,8 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Clinic)
 class ClinicAdmin(admin.ModelAdmin):
     list_display = ('name','latitude','longitude','altitude')
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    pass
+
