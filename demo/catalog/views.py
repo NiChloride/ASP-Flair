@@ -19,7 +19,7 @@ def signin(request):
 
     if request.method == 'POST':
         print("POST")
-        form_post = FormForReg(request.POST)
+        form_post = FormForSignIn(request.POST)
         if form_post.is_valid():
 
             #print("data", form_post.cleaned_data)
@@ -28,11 +28,12 @@ def signin(request):
             password = form_post.cleaned_data['password']
             print(username)
             print(password)
-            user = auth.authenticate(username=username, password=password)
-            print(user.role)
-            if user is not None and user.is_active:
-                auth.login(request, user)
-                if(user.role == "ClinicManager"):
+            luser = auth.authenticate(username=username, password=password)
+            #print(luser.role)
+            if luser is not None and luser.is_active:
+                auth.login(request, luser)
+                userprofile_obj = UserProfile.objects.get(user = luser)
+                if(userprofile_obj.role == "ClinicManager"):
                     return HttpResponseRedirect("catalog/c/")
 
 
