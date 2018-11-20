@@ -1,12 +1,23 @@
 <!DOCTYPE html>
+<!--
 <html>
 	<head>
 	<title>Air-Supply Pilot</title>
 	<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-	<link rel="stylesheet" href="../static/css/mystyles.css">
+	<link rel="stylesheet" href="./stylesheets/mystyles.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="../static/javascript/myscripts.js"></script>
-	</head>
+	<script src="./javascripts/myscripts_cm_view.js"></script>
+	</head>	
+	-->
+<html>
+	<head>
+	<title>Air-Supply Pilot</title>
+		{%load static %}
+	<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link rel="stylesheet" href="{% static 'css/mystyles.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="{% static 'javascript/myscripts_cm_view.js' %}"></script>
+</head>	
 	
 <body ng-app="bookApp" ng-controller="bookController" ng-init="getBookList()">
 
@@ -16,7 +27,7 @@
 
 <div class="topnav">
   <table width="100%"><tr>
-	<td width="85%" id="firstCell"><a href="#" ng-click="loginPage()" class="typicalBtn" id="signinbtn">Sign in</a></td>
+	<td width="85%" id="firstCell"><a href="#" ng-click="loginPage()" class="typicalBtn">Sign in</a></td>
 	<td width="15%" ng-click="loadCart()"><div class="icon-cart" style="float: left" id="cartBtn">
 		<div class="cart-line-1" style="background-color: #E5E9EA"></div>
 		<div class="cart-line-2" style="background-color: #E5E9EA"></div>
@@ -40,17 +51,6 @@
 	  <li ng-click="getBookList('IV Fluids')"><a href="#">IV Fluids</a></li>
 	  </ul>
     </div>
-    <div class="card" id="secondbox">
-      <h3>Recent News</h3>
-      <div class="fakeimg"><p>Image</p></div>
-      <div class="fakeimg"><p>Image</p></div>
-      <div class="fakeimg"><p>Image</p></div>
-    </div>
-    <div class="card" id="thirdbox">
-      <h3>Follow Me</h3>
-      <p>Some text..</p>
-    </div>
-
   </div>
   
   
@@ -67,14 +67,16 @@
 			<tr><td ng-click='back2()'>continue browsing></td></tr>
 	</table>
 	</div>
-	
+	<!--Get the response array name and feature name-->
 	<div class="layout" id="contentLayout">
-	<div ng-repeat="book in bookList" >
-		<div id = "x_book._id" ng-click="getBookInformation(book._id)">
-		<img ng-src=x_book.coverImage height="420" width="280">
-		<h2>x_book.title</h2>
-		<h4>x_book.authorList}}</h4>
-		<h4>x_book.price}}</h4>
+	<div>
+	{% for x in supply_list%}
+		<div id = "#" ng-click="getBookInformation(book._id)">
+			{% load static %}
+        <img src="{% static {{x.image}} %}" alt="My image" height="200" width="140"/>
+		<h2>{{x.name}}</h2>
+		<h4>{{x.category}}</h4>
+	{% endfor %}
 		</div>
 	</div>
 	</div>
@@ -109,37 +111,7 @@
 	</div>
 </div>
 
-<div class="login" id="login" align="center">
-	<div class="inputArea">
-	<form action="/catalog/" method="post" id="form_for_register">{% csrf_token %}
-	<table>
-	<tr id=""username_row"><td>Username: </td><td>{{formForReg_obj.username}}</td></tr>
-	<tr><td>Password: </td><td>{{formForReg_obj.password}}</td></tr>
-	<tr><td>Email address: </td><td>{{formForReg_obj.email}}</td></tr>
-	<tr><td>Token: </td><td>{{formForReg_obj.token}}<button id="send_token_btn">Get Token</button></td></tr>
-	<tr><td>Role: </td><td>{{formForReg_obj.role}}</td></tr>
-	<tr><td><input type="submit" value="Submit"></td></tr>
-	</table>
-	</form>
-	<!-- Sign in form -->
-	<form action="/catalog/" method="post" id="form_for_signin">{% csrf_token %}
-	<table>
-	<tr><td>Username: </td><td>{{formForSignIn_obj.username}}</td></tr>
-	<tr><td>Password: </td><td>{{formForSignIn_obj.password}}</td></tr>
-	<tr><td><input type="submit" value="Sign In"></td></tr>
-	</table>
-	</form>
 
-	<button ng-click="register()" id="register_btn">Register</button>
-	</div>
-</div>
-
-
-
-
-<div class="footer" id="footer">
-  <h2>Footer</h2>
-</div>
 
 </body>
 </html>

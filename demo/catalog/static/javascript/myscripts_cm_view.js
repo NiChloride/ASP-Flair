@@ -8,10 +8,6 @@ book_app.controller('bookController', function($scope, $http, $compile){
 		//original page type=null
 		if (type == null){
 			type = "nil";
-			document.getElementById("leftbar").style.display="none";
-			document.getElementById("footer").style.display="none";
-			document.getElementById("contentArea").style.display="none";
-			document.getElementById("cartSummary").style.display="none";
 		}
 		
 	};
@@ -27,8 +23,6 @@ book_app.controller('bookController', function($scope, $http, $compile){
 		//	angular.element(document.getElementById("firstbox")).after(picture);
 			document.getElementById("infoPic1").style.display="grid";
 			document.getElementById("firstbox").style.display="none";
-			document.getElementById("secondbox").style.display="none";
-			document.getElementById("thirdbox").style.display="none";
 			document.getElementById("footer").style.display="none";
 			var description = $compile("<table id='inforTable'><tri><td width='50%'><div class='informationLayout'><div><ul><li>{{information.title}}</li><li>{{information.authorList}}</li><li>{{information.price}}</li><li>{{information.publisher}}</li><li>{{information.date}}</li><li>{{information.description}}</li></ul></div></td><td class='CartBox_InfoPage'><p>Quantity: <input id='addQuantity' type='number' max='99' ng-model='addQuantity'></input><p><button class={{information._id}} id='addBookBtn' ng-click='addToCart()'>Add to Cart</button></td></tr><tr><td ng-click='back1()'>GO BACK</td></tr></table>")($scope);
 			angular.element(document.getElementById("contentLayout")).after(description);
@@ -73,10 +67,7 @@ book_app.controller('bookController', function($scope, $http, $compile){
 	}
 	
 	$scope.loginPage = function(){
-		document.getElementById("mainPage").style.display="none";
-		document.getElementById("footer").style.display="none";
-		document.getElementById("login").style.display="inline";	
-		document.getElementById("infoPic1").style.display="none";
+		window.location.href="signin.html";
 	}
 	
 	$scope.signin = function(user) {
@@ -107,12 +98,13 @@ book_app.controller('bookController', function($scope, $http, $compile){
 			$scope.password=null;
 		}
 	}
-/*
+	
 	$scope.register = function(){
 		document.getElementById("register_btn").style.display="none";
+		document.getElementById("form_for_register").style.display="inline";
 		document.getElementById("form_for_signin").style.display="none";
 	}
-*/
+	
 	$scope.signout = function(){
 		$http.get('/myroutes/signout').then( function(response){
 			if(response.data == ''){

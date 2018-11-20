@@ -123,5 +123,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
+
+STATICFILES_DIRS = (
+    ("css", os.path.join(STATIC_ROOT, 'css').replace('\\', '/')),
+    ("javascript", os.path.join(STATIC_ROOT, 'javascript').replace('\\', '/')),
+)
+
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'

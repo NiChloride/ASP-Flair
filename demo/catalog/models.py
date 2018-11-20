@@ -11,7 +11,7 @@ class Supply(models.Model):
 
     weight = models.FloatField(help_text="Enter the weight of supply")
 
-    image = models.ImageField( help_text="Upload an image of supply")
+    image = models.ImageField( help_text="Upload a image of supply")
 
     category = models.ForeignKey("Category",on_delete=models.SET_NULL, null=True)
     #category !!!!
@@ -33,7 +33,7 @@ class Category(models.Model):
 
 class Order(models.Model):
     """
-    Model representing an order
+    Model representing a order
     """
     order_id = models.AutoField(primary_key=True)
 
