@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.html import mark_safe
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -118,7 +120,6 @@ class OrderSupplyMatching(models.Model):
         #edit before
         super(OrderSupplyMatching,self).save(*args,**kw)
         self.order.weight+=self.supply.weight * self.numberofsupply
-
         self.order.save()
         #edit after
 
@@ -136,5 +137,22 @@ class Drone(models.Model):
     order = models.ManyToManyField(Order,help_text="Select order for this drone")
 
     #csvfile = models.FileField(editable=False)
+
+
+class UserProfile(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+
+    role = models.CharField(max_length=50)
+    
+    clinic = models.CharField(max_length=50)
+    
+    token = models.CharField(max_length=50,blank=True)
+
+    class Meta:
+        verbose_name = 'User Profile'
+
+    def __str__(self):
+        return self.user.__str__()
 
 

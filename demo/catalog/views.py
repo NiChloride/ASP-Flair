@@ -1,22 +1,42 @@
+from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.http import HttpResponse
 from django import forms
-
+from django.contrib.auth import get_user_model
 from .models import Supply, Clinic
-
+from .models import UserProfile
+from django.http import HttpResponseRedirect
+from django.contrib import auth
 # Create your views here.
+
 
 class FormForSignIn(forms.Form):
     username = forms.CharField(label='username')
-    password = forms.CharField(label='passname')
+    password = forms.CharField(label='password')
 
 def signin(request):
     formForSignIn_obj = FormForSignIn()
 
     if request.method == 'POST':
-        form_post = FormForReg(request.POST)
+        print("POST")
+        form_post = FormForSignIn(request.POST)
         if form_post.is_valid():
-            print("data", form_post.cleaned_data)
+
+            #print("data", form_post.cleaned_data)
+            print("valid!")
+            username = form_post.cleaned_data['username']
+            password = form_post.cleaned_data['password']
+            print(username)
+            print(password)
+            luser = auth.authenticate(username=username, password=password)
+            #print(luser.role)
+            if luser is not None and luser.is_active:
+                auth.login(request, luser)
+                userprofile_obj = UserProfile.objects.get(user = luser)
+                if(userprofile_obj.role == "ClinicManager"):
+                    return HttpResponseRedirect("catalog/c/")
+
+
         else:
             print("fail")
     else:
@@ -30,10 +50,10 @@ def signin(request):
 
 class FormForReg(forms.Form):
     ROLE_CHOICES=(
-        ('c',"Clinic Manager"),
-        ('w','Warehouse Personnel'),
-        ('d','Dispatcher'),
-        ('h','Hospital Authority')
+        ("ClinicManager","Clinic Manager"),
+        ('WarehousePersonnel','Warehouse Personnel'),
+        ('Dispatcher','Dispatcher'),
+        ('HospitalAuthority','Hospital Authority')
     )
 
     CLINIC_CHOICES=[('a', '')]
@@ -62,6 +82,26 @@ def registration(request):
         form_post = FormForReg(request.POST)
         if form_post.is_valid():
             print("data", form_post.cleaned_data)
+            username = form_post.cleaned_data['username']
+            password = form_post.cleaned_data['password']
+            email = form_post.cleaned_data['email']
+            firstname = form_post.cleaned_data['firstname']
+            lastname = form_post.cleaned_data['lastname']
+            clinic = form_post.cleaned_data['clinic']
+            token = form_post.cleaned_data['token']
+            role = form_post.cleaned_data['role']
+            user = User.objects.create_user(username=username, password=password, email=email,first_name=firstname,last_name=lastname)
+            user_profile = UserProfile(user=user, role=role, clinic = clinic)
+            user_profile.save()
+            his_group = Group.objects.get(name=role) 
+            his_group.user_set.add(user)
+
+            #User.objects.create(username=username,password=password,email=email,first_name = firstname, last_name = lastname, clinic = clinic, token = token)
+            #User.save()
+            return HttpResponseRedirect("/catalog/")
+
+
+
         else:
             print("fail")
     else:
@@ -102,6 +142,8 @@ def validate_username(request):
         data['error_message'] = 'A user with this username already exists.'
 
     return JsonResponse(data)
+
+
 
 """
 from .models import Book, Author, BookInstance, Genre
