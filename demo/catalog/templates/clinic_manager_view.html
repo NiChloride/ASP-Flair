@@ -71,11 +71,11 @@
 	<div class="layout" id="contentLayout">
 	<div>
 	{% for x in supply_list%}
-		<div id = "#" ng-click="getBookInformation(book._id)">
-			{% load static %}
-        <img src="{% static {{x.image}} %}" alt="My image" height="200" width="140"/>
+		<div id = "{{x.name}}" ng-click="getBookInformation()">
+        <img src="{{ x.image.url }}" alt="My image" height="200" width="140"/>
 		<h2>{{x.name}}</h2>
 		<h4>{{x.category}}</h4>
+			<h4>{{x.weight}} kg</h4>
 	{% endfor %}
 		</div>
 	</div>

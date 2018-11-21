@@ -73,14 +73,19 @@ def registration(request):
         context={'formForReg_obj': formForReg_obj},
     )
 
-def clinicManager(request):
+class FormForOrder(forms.Form):
     supply_list = Supply.objects.all()
     for supply in supply_list:
-        print(supply.image)
+        supply.name = forms.IntegerField()
+
+def clinicManager(request):
+    supply_list = Supply.objects.all()
+    formForOrder_obj = FormForOrder()
+
     return render(
         request,
         'clinic_manager_view.html',
-        context={'supply_list': supply_list},
+        context={'supply_list': supply_list, "formForOrder_obj": formForOrder_obj},
     )
 
 from django.http import JsonResponse

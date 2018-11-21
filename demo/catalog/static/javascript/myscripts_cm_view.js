@@ -12,26 +12,35 @@ book_app.controller('bookController', function($scope, $http, $compile){
 		
 	};
 	
-	
-	$scope.getBookInformation = function(id){
-		var bookid = id;
-		
-		$http.get("/myroutes/loadbook/"+bookid).then( function(response){
-			$scope.information = response.data[0];
-		//	var picture = $compile("<div class='infoPic' id='infoPic1'><img ng-src='{{information.coverImage}}' class='infoCover' height='420' width='280'></div>")($scope);
-			angular.element(document.getElementById("leftbar")).css('background','none');
-		//	angular.element(document.getElementById("firstbox")).after(picture);
-			document.getElementById("infoPic1").style.display="grid";
-			document.getElementById("firstbox").style.display="none";
-			document.getElementById("footer").style.display="none";
-			var description = $compile("<table id='inforTable'><tri><td width='50%'><div class='informationLayout'><div><ul><li>{{information.title}}</li><li>{{information.authorList}}</li><li>{{information.price}}</li><li>{{information.publisher}}</li><li>{{information.date}}</li><li>{{information.description}}</li></ul></div></td><td class='CartBox_InfoPage'><p>Quantity: <input id='addQuantity' type='number' max='99' ng-model='addQuantity'></input><p><button class={{information._id}} id='addBookBtn' ng-click='addToCart()'>Add to Cart</button></td></tr><tr><td ng-click='back1()'>GO BACK</td></tr></table>")($scope);
-			angular.element(document.getElementById("contentLayout")).after(description);
-			document.getElementById("contentLayout").style.display = "none";
-			document.getElementById("pagenav").style.display = "none";
-		}, function (response){
-			alert("Error: " + response.statusText);
-		});
-	};
+    $scope.getBookInformation = function(){
+        alert("clicked");
+
+        $http.post('127.0.0.1:8000/catalog/validate_username/ ', {username: "aaa"}).then(function(response){
+            if(response.data == "error"){
+            alert("error");
+            }else{
+            $scope.msg = data;
+            alert("done");
+            }},function(reponse){
+                alert("not connected");
+            }
+
+        );
+ /*       $.ajax({
+                url: {% url 'signin' %},
+                type: "POST",
+                data: post_data,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data["is_taken"]) {
+                        alert("done");
+                    } else {
+                        alert("fail");
+                    }
+                }
+        });
+*/
+    }
 	
 	$scope.back1 = function(){
 		document.getElementById("infoPic1").style.display="none";	

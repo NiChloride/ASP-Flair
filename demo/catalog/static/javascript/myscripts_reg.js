@@ -15,42 +15,14 @@ book_app.controller('bookController', function($scope, $http, $compile){
 		}
 		
 	};
-	
-	$scope.getToken = function(){
-		var post_data={
-			"username": document.getElementById("reg_username"),
-		};
-	/*		
-			
-	<tr><td>Username: </td><td id="reg_username">{{formForReg_obj.username}}</td></tr>
-		<tr><td>First name: </td><td id="reg_firstname">{{formForReg_obj.firstname}}</td></tr>
-		<tr><td>Last name : </td><td id="reg_lastname">{{formForReg_obj.lastname}}</td></tr>
-	<tr><td>Password: </td><td id="reg_password">{{formForReg_obj.password}}</td></tr>
-	<tr><td>Email address: </td><td id="reg_email">{{formForReg_obj.email}}</td></tr>
-	<tr><td>Token: </td><td id="reg_token">{{formForReg_obj.token}}<button id="send_token_btn" ng-click="getToken()">Get Token</button></td></tr>
-	<tr><td>Role: </td><td id="reg_role">{{formForReg_obj.role}}</td></tr>
-	<tr><td>Clinic: </td><td id="reg_clinic">{{formForReg_obj.clinic}}</td></tr>
-		*/	
-		$.ajax({
-			url: {% url 'reg/validate_username/' %},
-			type: "POST",
-			data: post_data,
-            success: function (data) {
-				data = JSON.parse(data);
-                if (data["status"] == 1) {
-					alert("Done");
-                } else {
-                    alert("Error");
-                }
-            }
 
-		});			
-			
-	};
-		
-	
-	
-	
+/*	$scope.getToken = function(){
+	    var a = document.getElementById("reg_firstname").innerHTML;
+	    alert(a);
+
+	};*/
+
+
 	$scope.getBookInformation = function(id){
 		var bookid = id;
 		
