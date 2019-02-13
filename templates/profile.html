@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% load static %}
+    <link rel=stylesheet type="text/css" href="{% static 'mystyles.css' %}">
+    <title>Profile</title>
+<style>
+table {
+    border-collapse: collapse;
+    width: 10%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+</style>
+
+  </head>
+  
+  <body>
+	  <div class="header" >
+		<h1 id="test">Air-Supply Pilot</h1>
+	  </div>
+
+	  <div class="topnav">
+		<table width="100%"><tr>
+	    {% if  user.userType == 'clinicManager'%}
+		<td width="85%" id="firstCell"><a href="/clinic_manager_order" class="typicalBtn">Order</a></td>
+		<td><a href="/clinic_manager_item" class="typicalBtn">Supplies</a></td>
+		
+		{% elif user.userType == 'warehousePersonnel'%}
+		<td><a href="/warehouse_personnel_order">Order</a></td>
+
+		{% elif user.userType == 'dispatcher'%}
+		<td><a href="/dispatcher_order">Order</a></td>
+
+		{% elif user.userType == 'admin'%}
+		<td><a href="/token">Token</a></td>
+
+		{% endif %}
+		<td width="15%" ng-click="loadCart()"><div class="icon-cart" style="float: left" id="cartBtn">
+		  <div class="cart-line-1" style="background-color: #E5E9EA"></div>
+		  <div class="cart-line-2" style="background-color: #E5E9EA"></div>
+		  <div class="cart-line-3" style="background-color: #E5E9EA"></div>
+		  <div class="cart-wheel" style="background-color: #E5E9EA"></div>
+		  </div>
+		  <div id="cartmsg">x_cartnum in cart</div>
+		</td>
+		</tr></table>
+	  </div>
+ 
+ 
+    <h1><center>Profile</center></h1>
+
+
+    {% if user.userType == 'warehousePersonnel'%}
+
+    <p>  
+       <input type="button" onclick="window.location = location.protocol + '//' + location.host + '/warehouse_personnel_order'" value="Order">
+    </p>
+
+
+    {% elif user.userType == 'dispatcher'%}
+
+    <p>  
+     <input type="button" onclick="window.location = location.protocol + '//' + location.host + '/dispatcher_order'" value="Order">
+    </p>
+
+    {% elif user.userType == 'admin'%}
+
+    <p>  
+     <input type="button" onclick="window.location = location.protocol + '//' + location.host + '/token'" value="token">
+    </p>
+
+
+    {% endif %}
+    <form action = "/apply_changes" method="POST">
+    {% csrf_token %}
+    <table align="center">
+      <tr>
+        <td><label>UserID:</label></td>
+        <td><label>{{ user.username }}</label></td>
+      </tr>
+      <tr>
+        <td><label>Password:</label></td>
+        <td><input type="password" name="password" id="password" value="{{ user.password }}"></td>
+      </tr>
+      <tr>
+        <td><label>Email address:</label></td>
+        <td><input type="email" name="email" id="email" value="{{ user.email }}"></td>
+      </tr>
+      <tr>
+        <td><label>First name:</label></td>
+        <td><input type="text" name="firstname" id="firstname" value="{{ user.first_name }}"></td>
+      </tr>
+      <tr>
+        <td><label>Last name:</label></td>
+        <td><input type="text" name="lastname" id="lastname" value="{{ user.last_name }}"></td>
+      </tr>
+      {% if  user.userType == 'clinicManager'%}
+        <tr>
+        <td><label>Clinic:</label></td>
+        <td><label>{{ user.clinic.name }}</label></td>
+      </tr>
+      {% endif %}
+    </table>
+  <p align="center">  <input type="submit" value="Change Information"></p>
+  </form>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Registration</title>
+        {% load static %}
+        <link rel=stylesheet type="text/css" href="{% static 'config.css' %}">
+        <style type="text/css">
+            form {
+                width: 700px;
+            }
+        </style>
+        <script>
+            function validateForm() {
+                var password = document.getElementById("password").value;
+                var confirmPassword = document.getElementById("confirmPassword").value;
+                var username = document.getElementById("username").value;
+                var token = document.getElementById("token").value;
+                var firstName = document.getElementById("firstName").value;
+                var lastName = document.getElementById("lastName").value;
+
+                if (password != confirmPassword || password == "" || username == "" || token == "" || firstName == "" || lastName == "") {
+                    alert("invalid input");
+                    return false;
+                } else {
+                    document.forms["myForm"].action = "/new_account";
+                    document.forms["myForm"].submit();
+                    return false;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <form name="emailForm" action="/send_token" method="post">
+        {% csrf_token %}
+        <p><label>ASP Registered E-mail: </label> <input type="text" name="email" id="email"></p>
+        <p><input type="submit" name="submit" value="Receive Registration Token" formtarget="_blank"></p>
+        </form>
+
+
+        
+       <form name="myForm" action=""
+       
+onsubmit="return validateForm()" method="post">
+           {% csrf_token %}
+            <div class=title>Registration</div>
+            <p><label>Clinic (only apply to clinic managers):</label><select name="location" >
+                {% for location in location_list %}
+                    <option value={{location.id}}>{{location.name}}</option>
+                {% endfor %}
+            </select></p>
+            <p><label>Username:</label> <input type="text" name="username" id="username"></p>
+            <p><label>Password:</label> <input type="password" name="password" id="password"></p>
+            <p><label>Confirm Password:</label> <input type="password" name="confirmPassword" id="confirmPassword"></p>
+           
+            <!--<a href = "http://127.0.0.1:8000/token" target="_blank">Get Token From Database</a>-->
+
+            <p><label>Token:</label> <input type="text" name="token" id="token"></p>
+            <p><label>First name:</label> <input type="text" name="firstName" id="firstName"></p>
+            <p><label>Last name:</label> <input type="text" name="lastName" id="lastName"></p>
+            
+            <p><input type="submit" name="submit" value="Submit"></p>
+        </form>
+    </body>
+</html>

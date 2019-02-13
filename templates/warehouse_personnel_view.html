@@ -1,0 +1,103 @@
+<!doctype html>
+{% load templatetag %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% load static %}
+    <link rel=stylesheet type="text/css" href="{% static 'mystyles.css' %}">
+    <style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: lightgray;
+    color: white;
+}
+
+
+</style>
+    <title>Warehouse Personnel</title>
+  </head>
+  <body>
+    <h1 style="text-align:center;">Warehouse</h1>
+    
+    <h3 style="text-align:center;">Queued for Processing</h3>
+    <table align="center">
+      <form method="POST" action="/process_order" name="queue" id="queue">
+      {% csrf_token %}
+        <tr>
+          <th><label> </label></th>
+          <th><label>Order ID</label></th>
+          <th><label>Status</label></th>
+          <th><label>Destination</label></th>
+          <th><label>Priority</label></th>
+          <th><label>Weight</label></th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        {% for order in process_queue %}
+          <tr>
+            
+            <td><a href="#" onclick="window.location = location.protocol + '//' + location.host + '/warehouse_personnel_checklist/{{order.id}}'">checklist</a></td>
+            <td><label>{{order.id}}</label></td>
+            <td><label>{{order.status}}</label></td>
+            <td><label>{{order.location.name}}</label></td>
+            <td><label>{% if order.priority == 1 %}Low{% endif %}{% if order.priority == 2 %}Medium{% endif %}{% if order.priority == 3 %}High{% endif %}</label></td>
+            <td><label>{{ order|total_weight }}kg</label></td>
+            <td><input type="submit" value="Process" onclick="this.form.elements['orderID'].value = '{{order.id}}';"/></td>
+            
+          </tr>
+        {% endfor %}
+        <input type="hidden" name="orderID" id="orderID" value="0">
+      </form>    
+    </table>
+
+    <h3 style="text-align:center;">Processing</h3>
+    <table align="center">
+      <form method="POST" action="/packing" name="process" id="process">
+      {% csrf_token %}
+        <tr>
+          <th><label>Checklist</label></th>
+          <th><label>Order ID</label></th>
+          <th><label>Destination</label></th>
+          <th><label>Status</label></th>
+          <th><label>Priority</label></th>
+          <th><label>Weight</label></th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        {% for order in processing %}
+        <tr>
+          <td><a href="#" onclick="window.location = location.protocol + '//' + location.host + '/warehouse_personnell_checklist/{{order.id}}'">checklist</a></td>
+          <td><label>{{order.id}}</label></td>
+          td><label>{{order.location.name}}</label></td>
+          <td><label>{{order.status}}</label></td>
+          <td><label>{{order.location.name}}</label></td>
+          <td>
+            <label>
+              {% if order.priority == 1 %}Low{% endif %}
+              {% if order.priority == 2 %}Medium{% endif %}
+              {% if order.priority == 3 %}High{% endif %}
+            </label>
+          </td>
+          <td><label>{{ order|total_weight }}kg</label></td>
+          <td><input type="submit" value="Packed" onclick="this.form.elements['orderID'].value = '{{order.id}}';"/></td>
+          <td><button type="submit" formaction="/sendShippingLabel" onclick="this.form.elements['orderID'].value = '{{order.id}}';">E-mail shipping label</button></td>
+        </tr>
+        {% endfor %}
+        <input type="hidden" name="orderID" id="orderID" value="0">
+      </form>
+    </table>
+  </body>
+</html>

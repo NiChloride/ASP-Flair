@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+    <head>
+        <title>
+           ASP Login
+        </title>
+        {% load static %}
+        <link rel=stylesheet type="text/css" href="{% static 'config.css' %}">
+        <style type="text/css">
+            form {
+                width: 500px;
+            }
+        </style>
+        <script type="text/javascript">
+            function login(){
+                window.location.href = '/profile/' + document.getElementById("username").value + '/' + document.getElementById("password").value;
+            }
+        </script>
+    </head>
+    <body>
+	  <div class="header" >
+		<h1>Air Supply - Pilot</h1>
+        <h3 id="test">by Flair</h3>
+	  </div>
+
+	  <div class="topnav">
+		<table width="100%"><tr>
+		<td width="85%" id="firstCell"><a href="#" ng-click="loginPage()" class="typicalBtn" style="height: 50px"></a></td>
+		<td width="15%" ng-click="loadCart()"><div class="icon-cart" style="float: left" id="cartBtn">
+		  <div class="cart-line-1" style="background-color: #E5E9EA"></div>
+		  <div class="cart-line-2" style="background-color: #E5E9EA"></div>
+		  <div class="cart-line-3" style="background-color: #E5E9EA"></div>
+		  <div class="cart-wheel" style="background-color: #E5E9EA"></div>
+		  </div>
+		  <div id="cartmsg">x_cartnum in cart</div>
+		</td>
+		</tr></table>
+	  </div>
+	  <div class="formPosition">
+      <form method="post" action="/login_handling">
+        {% csrf_token %}
+        <br>
+        <p><label>Username:</label> <input type="text" name="username" id="username"></p>
+        <p><label>Password:</label> <input type="password" name="password" id="password"></p>
+
+        <p>
+            <input type="button" name="forgetPassword" value="Forget Password?" class="leftButton" onclick="window.location.href = 'forget_password';">
+            <input type="button" name="register" value="Register" class="leftButton" onclick="window.location.href = 'register';">
+            <input type="submit" name="submit" value="Login">
+        </p>
+      </form>
+	  </div>
+    </body>
+</html>

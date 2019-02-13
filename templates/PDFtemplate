@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+    <body>
+        <p>Order: {{order.id}}</p>
+        <p>Order Time: {{order.creation_time}}</p>
+        <p>Priority: {{order.priority}}</p>
+        <p>Location: {{order.destination.name}}</p>
+        <p>Items: 
+            <ol>
+                {% for item in order.item_list.all %}
+                <li>{{item.name}}: {% for set in item.order_item_set.all %}
+                      {% if set.item_id == item.id and set.order_id == order.id%}
+                        {{set.quantity}}
+                      {% endif %}
+                    {% endfor %}</li>
+                {% endfor %}
+            </ol>
+        </p>
+    </body>
+</html>
