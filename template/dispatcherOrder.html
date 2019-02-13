@@ -1,0 +1,112 @@
+<!doctype html>
+{% load tag %}
+<html>
+  <head>
+    <meta charset="utf-8">
+	{% load static %}
+    <link rel=stylesheet type="text/css" href="{% static 'mystyles.css' %}">
+    <style>
+table {
+    border-collapse: collapse;
+    width: 10%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: lightgray;
+    color: white;
+}
+
+
+</style>
+    <title>Dispatcher_order</title>
+  </head>
+  <body>
+	<div class="header" >
+    <h1 id="test">Air-Supply Pilot</h1>
+	</div>
+	
+    <h1 style="text-align:center;">Air Supply-Pilot Dispatcher</h1>
+    <h2 style="text-align:center;">Order Queue</h2>
+	
+	<!--<div class="leftcolumn" id="leftbarorder">
+    <p align="right">
+      <form action="/autopack" method="POST">
+        <input type="submit" value="Auto pack" >
+      </form>
+    </p>
+	</div>-->
+	
+
+	<div class="rightcolumn" id="contentArea">
+    <form>
+    {% csrf_token %}
+    <table align="center" id="orderArea">
+      <tr>
+        <th></th>
+        <th><label>Order</label></th>
+        <th><label>Status</label></th>
+        <th><label>Clinic</label></th>
+        <!--<th><label>Location ID</label></th>-->
+        <th><label>Priority</label></th>
+        <th><label>Weight</label></th>
+        <th></th>
+      </tr>
+<!-- for pack = order in the database -->
+      {% for order in order_list %}
+      <tr>
+        <td><input type="checkbox" name="orderId[]" value="{{order.id}}"></td>
+        <td>{{order.id}}</td>
+        <td>{{order.status}}</td>
+        <td>{{order.location.name}}</td>
+        <!--<td>{{order.location.id}}</td>-->
+        <td><label>{% if order.priority == 1 %}Low{% endif %}{% if order.priority == 2 %}Medium{% endif %}{% if order.priority == 3 %}High{% endif %}</label></td>
+        <td><label>{{ order|getCombinedWeight }}kg</label></td>
+        <!--<td><input type="button" value="Dispatched" onclick="window.location = location.protocol + '//' + location.host + '/dispatch/{{order.id}}'"></td>-->
+      </tr>
+      {% endfor %}
+      
+    </table>
+    <button type="submit" formaction="/dispatch_selected" formmethod="POST">Dispatch Selected Orders</button>
+    </form>
+    
+
+
+    <form method="POST" action="/download_itinerary">
+    {% csrf_token %}
+    <h2 style="text-align:center;">Drone Queue</h2>
+    <table align="center" id="orderArea">
+      <tr>
+        <th>Drone</th>
+        <th>Order</th>
+        <th></th>
+        <th></th>
+      </tr>
+      {% for pack in packs %}
+      <tr>
+        <td>{{ pack.id }}</td>
+        <td>
+          <ul>
+          {% for order in pack.order.all %}
+            <li>{{ order.id }}</li>
+          {% endfor %}
+          </ul>
+        </td>
+        <td><button type="submit" onclick="this.form.elements['packId'].value = '{{pack.id}}';">Download Itinerary</button></td>
+        <td><button type="submit" onclick="this.form.elements['packId'].value = '{{pack.id}}';" formaction="/dispatch_drone">Dispatch Drone</button></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <input type="hidden" name="packId" id="packid" value="0">
+    </form>
+	</div>
+
+
+  </body>
+</html>

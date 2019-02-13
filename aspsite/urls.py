@@ -22,36 +22,38 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('', views.login),
+    path('', views.mainpage),
     path('forget_password', views.forgetPassword),
     path('reset_password_request', views.processResetPassword),
     path('reset_password', views.resetPassword),
     path('register', views.register.as_view()),
-    path('profile', views.ProfileView.as_view()),
+    path('profile', views.Profile.as_view()),
     path('login_handling', views.login_handling.as_view()),
 
-    path('clinic_manager_item', views.ClinicManagerView.as_view()),
-    path('clinic_manager_item_description/<int:itemid>', views.ItemDescriptionView.as_view()),
-    path('clinic_manager_order', views.OrderView.as_view(), name = 'clinic_manager_order'),
+    path('clinic_manager_item', views.clinicManagerItem.as_view()),
+    path('clinic_manager_item_description/<int:itemid>', views.clinicManagerDescription.as_view()),
+    path('clinic_manager_order', views.clinicManagerOrder.as_view(), name = 'clinic_manager_order'),
     path('receive_confirmation', views.receive_confirmation),
 
-    path('warehouse_personnel_order', views.WarehousePersonnelView.as_view(), name = 'warehouse_personnel_order'),
-    path('warehouse_personnel_checklist/<int:orderid>', views.OrderItemsView.as_view()),
+    path('warehouse_personnel_order', views.warehousePersonnelOrder.as_view(), name = 'warehouse_personnel_order'),
+    path('warehouse_personnel_checklist/<int:orderid>', views.warehousePersonnelChecklist.as_view()),
 
-    path('dispatcher_order', views.DispatcherView.as_view(), name = 'dispatcher_order'),
+    path('dispatcher_order', views.dispatcherOrder.as_view(), name = 'dispatcher_order'),
 
+    path('token', views.TokenView.as_view()),
+    #path('sendToken', views.sendToken),
+    path('send_token', views.send_token),
     
-    
 
-    path('apply_changes', views.edit_profile),
-    path('place_order', views.place_order),
+    path('changeInfo', views.changeProfile),
+    path('makeOrder', views.makeOrder),
     path('cancel_order/<int:orderid>', views.cancel_order),
-    path('process_order', views.process_order),
-    path('packing', views.packing),
+    path('processOrder', views.processOrder),
+    path('pack', views.pack),
     path('dispatch_selected', views.dispatch_selected),
     path('sendShippingLabel', views.sendShippingLabel),
     path('download_itinerary', views.download_itinerary),
-    path('send_token', views.send_token),
+    #path('dispatch/<int:orderid>', views.dispatch),
     path('dispatch_drone', views.dispatch_drone),
     path("new_account", views.new_account),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Profile</title>
+<style>
+table {
+    border-collapse: collapse;
+    width: 10%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+</style>
+
+  </head>
+  <body>
+    <h1><center>Profile</center></h1>
+    {% if  user.userType == 'clinicManager'%}
+
+    <p>
+    <input type="button"  onclick="window.location = location.protocol + '//' + location.host + '/clinic_manager_item'"  value="Description" >
+       
+      <input type="button" onclick="window.location = location.protocol + '//' + location.host + '/clinic_manager_order'" value="View Orders">
+    </p>
+
+    {% elif user.userType == 'warehousePersonnel'%}
+
+    <p>  
+       <input type="button" onclick="window.location = location.protocol + '//' + location.host + '/warehouse_personnel_order'" value="Order Process Queue">
+    </p>
+
+
+    {% elif user.userType == 'dispatcher'%}
+
+    <p>  
+     <input type="button" onclick="window.location = location.protocol + '//' + location.host + '/dispatcher_order'" value="Orders Awaiting Dispatch">
+    </p>
+
+    {% endif %}
+
+    <form action = "/changeInfo" method="POST">
+    {% csrf_token %}
+    <table align="center">
+      <tr>
+        <td><label>First Name:</label></td>
+        <td><input type="text" name="firstname" id="firstname" value="{{ user.first_name }}"></td>
+      </tr>
+      <tr>
+
+        <td><label>Last Name:</label></td>
+        <td><input type="text" name="lastname" id="lastname" value="{{ user.last_name }}"></td>
+      </tr>
+
+      <tr>
+        <td><label>Username:</label></td>
+        <td><label>{{ user.userID }}</label></td>
+      </tr>
+
+      <tr>
+        <td><label>Password:</label></td>
+        <td><input type="password" name="password" id="password" value="{{ user.password }}"></td>
+      </tr>
+      <tr>
+        <td><label>Email address:</label></td>
+        <td><input type="email" name="email" id="email" value="{{ user.email }}"></td>
+      </tr>
+      
+      {% if  user.userType == 'clinicManager'%}
+        <tr>
+        <td><label>Clinic:</label></td>
+        <td><label>{{ user.clinic.name }}</label></td>
+      </tr>
+      {% endif %}
+    </table>
+  <p align="center">  <input type="submit" value="Apply Changes"></p>
+  </form>
+  </body>
+</html>

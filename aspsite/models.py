@@ -13,11 +13,11 @@ class Item(models.Model):
 		return '{} {} {} {}'.format(self.category,self.name, self.description, self.unitWeight)
 
 class Distance(models.Model):
-    FROM = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='FROM')
-    TO = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='TO')
+    location1 = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='location1')
+    location2 = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='location2')
     distance = models.DecimalField(max_digits=5, decimal_places=2)
     def __str__(self):
-    	return '{} {} {}'.format(self.FROM,self.TO,self.distance)
+    	return '{} {} {}'.format(self.location1,self.location2,self.distance)
 
 class Location(models.Model):
 	category = models.CharField(max_length=30)
@@ -26,28 +26,27 @@ class Location(models.Model):
 	latitude = models.DecimalField(max_digits=11, decimal_places=6)
 	longitude = models.DecimalField(max_digits=11, decimal_places=6)
 	altitude = models.IntegerField()
-	Distance = models.ManyToManyField("self", through='Distance', through_fields=('FROM', 'TO'), symmetrical=False)
+	Distance = models.ManyToManyField("self", through='Distance', through_fields=('location1', 'location2'), symmetrical=False)
 	def __str__(self):
 		return '{}'.format(self.name)
 
 class Order(models.Model):
-	creation_time = models.DateTimeField(null = True)
 	status = models.CharField(max_length=30)
 	priority = models.IntegerField()
-	item_list = models.ManyToManyField(Item, through='OrderItemMatching')
-	destination = models.ForeignKey(Location, on_delete=models.CASCADE)
+	items = models.ManyToManyField(Item, through='Order_Item')
+	location = models.ForeignKey(Location, on_delete=models.CASCADE)
 	dispatchedTime = models.DateTimeField(null = True)
 	deliveredTime = models.DateTimeField(null = True)
 	def __str__(self):
-		return '{} {}'.format(self.destination,self.status, self.priority)
+		return '{} {}'.format(self.location,self.status, self.priority)
 
-	def total_weight(self):
+	def getCombinedWeight(self):
 		totalWeight = 0.0
 		for item in self.items.all():
-			totalWeight += float(item.unitWeight) * OrderItemMatching.objects.get(item_id = item.id, order_id = self.id).quantity
+			totalWeight += float(item.unitWeight) * Order_Item.objects.get(item_id = item.id, order_id = self.id).quantity
 		return totalWeight
 
-class OrderItemMatching(models.Model):
+class Order_Item(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField()
@@ -57,7 +56,7 @@ class OrderItemMatching(models.Model):
 
 
 class User(models.Model):
-	username = models.CharField(max_length=50)
+	userID = models.CharField(max_length=50)
 	password = models.CharField(max_length=20)
 	email = models.EmailField()
 	clinic = models.ForeignKey('Location', on_delete=models.CASCADE, null = True)
@@ -67,10 +66,29 @@ class User(models.Model):
 	def __str__(self):
 		return '{} {} {} {} {}'.format(self.userID, self.email, self.clinic, self.first_name, self.last_name)
 
-class Drone(models.Model):
+class Dispatch_Record(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+	dispatch_date_time = models.DateTimeField()
+	dispatch_weight = models.DecimalField(max_digits=4, decimal_places=1)
+	def __str__(self):
+		return '{} {}'.format(self.dispatch_date_time, self.dispatch_weight)
+
+class Deliver_Record(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+	delivered_date_time = models.DateTimeField()
+	def __str__(self):
+		return '{}'.format(self.delivered_date_time)
+
+class Dispatch_Queue(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+class Pack(models.Model):
 	order = models.ManyToManyField(Order)
 	itinerary = models.ManyToManyField(Distance)
 
+class Packing_Queue(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+	priority = models.IntegerField()
 
 class Token(models.Model):
 	token = models.CharField(max_length=10)

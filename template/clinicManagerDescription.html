@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% load static %}
+    <link rel=stylesheet type="text/css" href="{% static 'mystyles.css' %}">
+    <title>ASP_clinicmanager_profile_webpage</title>
+  </head>
+
+  <body>
+  
+  <div class="header" >
+    <h1 id="test">Supply Descriptions</h1>
+  </div>
+
+  <div class="topnav">
+    <table width="100%"><tr>
+    <td width="85%" id="firstCell"><a href="/profile" ng-click="loginPage()" class="typicalBtn" style="height: 50px">Profile</a>
+		<a href="/clinic_manager_order" class="typicalBtn">Order</a>
+	</td>
+    <td width="15%" ng-click="loadCart()"><div class="icon-cart" style="float: left" id="cartBtn">
+      <div class="cart-line-1" style="background-color: #E5E9EA"></div>
+      <div class="cart-line-2" style="background-color: #E5E9EA"></div>
+      <div class="cart-line-3" style="background-color: #E5E9EA"></div>
+      <div class="cart-wheel" style="background-color: #E5E9EA"></div>
+      </div>
+      <div id="cartmsg">x_cartnum in cart</div>
+    </td>
+    </tr></table>
+  </div>
+
+  <div class="row" id="mainPage">
+    <div class="leftcolumn" id="leftbar">
+    <h1 id='shoppingCart'>Shopping Cart</h1>	
+    <div class='infoPic' id='infoPic1'>
+    <!--	<img ng-src='x_information.coverImage' class='infoCover' height='420' width='280'> -->
+    </div>	
+    <div class="card" id="firstbox">	
+    <h2>Supplies List</h2>
+      <ul>
+
+      {% load static %}
+      {% for item in item_list %}
+	  <li>
+	  <a href="#" onclick="window.location = location.protocol + '//' + location.host + '/clinic_manager_item_description/{{ item.id }}'">
+      <br>
+      {{ item.name}} 
+      </a>
+	  
+	  </LI>
+	  {% endfor %}
+      </ul>
+      </div>
+    </div>
+    
+    
+    <div class="rightcolumn" id="contentArea">
+    <div id="addedPage">
+      <div>Added to Cart</div>
+      <div>Cart subtotal (x_numberOfBooks item(s)): $x_amount</div>
+      <div ng-click="back1()">continue browsing></div>
+    </div>
+    <div id="paidPage">
+    <table id="paidmsg">
+        <tr><td><div>You have successfully paid order for x_totalCount item(s)</div></tr></td>
+        <tr><td><div>$x_subtotal paid</div></tr></td>
+        <tr><td ng-click='back2()'>continue browsing></td></tr>
+    </table>
+    </div>
+    <!--Get the response array name and feature name-->
+    <div class="layout">
+    <div>
+
+	{% load static %}
+      <div id = "{{item.name}}" ng-click="getBookInformation()">
+      <img src="{%static item.image.url %}" alt="My image" height="200" width="140"/>
+      <h4>CATEGORY: {{item.category}}</h4>
+      <h4>NAME: {{item.name}}</h4>
+      <h4>UNIT WEIGHT: {{item.unitWeight}} kg</h4>
+	  <h4>Description: {{item.description}}</h4>
+
+      </div>
+    </div>
+    </div>
+    </div>
+	
+    <div class="rightcolumn" id="cartSummary">
+      <table id="summaryTable">
+        <tr id="summaryTitle">
+          <td class="summary1"></td>
+          <td class="summary1"></td>
+          <td class="summary2">Price:</td>
+          <td class="summary3">Quantity</td>
+        </tr id="summaryContent">
+        <tr ng-repeat="order in cartList" id="x_order.bookId">
+          <td class="summary1"><img ng-src=x_order.coverImage height="315" width="210"></td>
+          <td class="summary1"><p>x_order.title}}</p><p>x_order.authorList}}</p></td>
+          <td class="summary2">x_order.price}}</td>
+          <td class="summary3"><input type="number" ng-model="order.quantity" ng-change="updateCart(order.bookId,order.quantity)">x_order.quantity}}</td>
+        </tr>
+        <tr id="browsingLink">
+          <td colspan="3">Cart subtotal (x_totalCount}} item(s)): $x_subtotal}}</td>
+          <td colspan="3"><button ng-click="checkout()">Proceed to check out</button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
+
+  </body>
+</html>
