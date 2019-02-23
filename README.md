@@ -1,2 +1,2 @@
 # ASP-Flair
-COMP3297 2018-19 Project
+HKU SE 2018-19 Project
